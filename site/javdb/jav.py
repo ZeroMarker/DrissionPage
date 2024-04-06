@@ -38,7 +38,7 @@ https://blog.csdn.net/weixin_49184448/article/details/134684160
 【爬虫】爬取网易云音乐热歌榜
 """
 # 创建记录器对象
-recorder = Recorder('music_data.csv')
+recorder = Recorder('data.csv')
 
 # 遍历页面上所有 li 元素 获取热歌榜Top200的歌名和url
 for index, a in enumerate(page.eles('xpath://div[@class="item"]/a')):
