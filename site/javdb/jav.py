@@ -1,27 +1,74 @@
 from DrissionPage import ChromiumPage
 from DataRecorder import Recorder
+from enum import Enum
 
-# 创建页面对象，并启动或接管浏览器
-page = ChromiumPage()
-# 跳转到登录页面
-# page.get('https://javdb.com/actors/GgVz?t=s&sort_type=2')
-page.get('https://javdb.com/actors/Y3MD?t=s,d&sort_type=0')
+
+class T(Enum):
+    Playable = 'p'
+    Single = 's'
+    Downloadable = 'd'
+    Caption = 'c'
+
+
+class SortType(Enum):
+    More_recent = 0
+    Top_Rated = 1
+    More_Viewed = 2
+    More_watch_to_watch = 3
+    More_watched = 4
+
+
+class F(Enum):
+    All = 'all'
+    Code = 'code'
+    Actor = 'actor'
+
 
 base = "https://javdb.com"
-
-sort_type = {"More recent": 0, "Top Rated": 1, "More Viewed": 2, "More watch to watch": 3, "More watched": 4}
-
-t = {"Individual works": "s", "Downloadable": "d", "Playable": "p"}
-
 actor_name = "/Y3MD"
-actor = "/actor"
+actor = "/actors"
 
+search = '/search'
 movie = "/v"
 movie_title = "123"
 
-page_number = 2
+option = ','.join([t.value for t in [T.Single, T.Downloadable]])
 
-url = base + actor + actor_name + page_number
+sort_type = SortType.More_recent.value
+
+params = []
+page_num = 4
+if page_num:
+    params.append('page=' + str(page_num))
+
+if option:
+    params.append('t=' + option)
+
+if sort_type:
+    params.append('sort_type=' + str(sort_type))
+
+query = []
+q = 'julia'
+if q:
+    query.append('q=' + q)
+f = F.All.value
+if f:
+    query.append('f=' + f)
+
+# url = base + actor + actor_name + '?' + '&'.join(query)
+
+url = base + search + '?' + '&'.join(query)
+
+# 创建页面对象，并启动或接管浏览器
+page = ChromiumPage()
+
+# page.get('https://javdb.com/actors/GgVz?t=s&sort_type=2')
+# https://javdb.com/actors/1ERn?t=s,d&sort_type=0
+# https://javdb.com/actors/1ERn?page=3&sort_type=0&t=s%2Cd
+# page.get('https://javdb.com/actors/Y3MD?t=s,d&sort_type=0')
+# https://javdb.com/search?q=julia&f=all
+page.get(url)
+
 # 年龄确认
 # page.ele('@class=is-success').click()
 # 定位到账号文本框，获取文本框元素
@@ -46,10 +93,12 @@ for index, a in enumerate(page.eles('xpath://div[@class="item"]/a')):
     # music_title = a.ele('tag:a').text
     title = a.attr('title')
     href = a.attr('href')
+    """
     # 请求歌曲url 获取歌手姓名
     # page.get(music_url)
     # music_singer = page.ele('xpath://p[@class="des s-fc4"]/span').text
     # print(music_ranking,music_title,music_singer)
+    """
 
     # 写入到记录器
     recorder.add_data((rank, title, href))
