@@ -17,8 +17,22 @@ filter:links
 filter:replies
 """
 
-# https://twitter.com/search?q=(from%3AApple)%20filter%3Alinks%20filter%3Areplies&src=typed_query
-
 # https://developer.twitter.com/en/docs/twitter-api/v1/rules-and-filtering/search-operators
 base = "https://twitter.com/search"
+
+"exact"
+
+since:2024-12-31
+
+until:2024-12-31
+
+from:@elonmusk
+
+lang:en 
+
+filter:videos
+
+-filter:media
+
+near:"New York" within:10mi
 
